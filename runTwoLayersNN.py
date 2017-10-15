@@ -119,7 +119,8 @@ if classifier.params['w1'] is not None:
     plt.savefig(baseDir+'nn2.png')
     plt.clf()
 
-
+learn_rates = np.array([7,9,11])*1e-3
+reg_strengths = np.array([7,9])*3e-3
 bestParameters = [0, 0]
 bestAcc = -1
 bestModel = None
@@ -132,7 +133,15 @@ bestModel = None
 # - Store the best accuracy in bestAcc                                         #
 # - Best Model should get validation accuracy above 35%                        #
 ################################################################################
-pass
+for rs in reg_strengths:
+    for lr in learn_rates:
+        classifier = TwoLayersNN(xTrain.shape[1], hiddenNeurons, numClasses)
+        classifier.train(xTrain, yTrain, lr, rs, iterations=1500 ,verbose=False)
+        valAcc = classifier.calAccuracy(xVal, yVal)
+        if valAcc > bestAcc:
+            bestAcc = valAcc
+            bestModel = classifier
+            bestParameters = [lr,rs]
 
 
 
